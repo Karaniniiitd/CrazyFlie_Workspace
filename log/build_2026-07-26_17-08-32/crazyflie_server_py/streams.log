@@ -1,0 +1,24 @@
+[0.577s] Invoking command in '/home/iiitd/cf_ws/build/crazyflie_server_py': AMENT_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces LD_LIBRARY_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/iiitd/cf_ws/build/crazyflie_server_py/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/iiitd/cf_ws/install/crazyflie_server_py/lib/python3.10/site-packages:/home/iiitd/cf_ws/install/crazyflie_interfaces/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/iiitd/cf_ws/build/crazyflie_server_py/build --no-deps symlink_data
+[0.705s] running develop
+[0.790s] running egg_info
+[0.790s] creating crazyflie_server_py.egg-info
+[0.790s] writing crazyflie_server_py.egg-info/PKG-INFO
+[0.790s] writing dependency_links to crazyflie_server_py.egg-info/dependency_links.txt
+[0.790s] writing entry points to crazyflie_server_py.egg-info/entry_points.txt
+[0.790s] writing requirements to crazyflie_server_py.egg-info/requires.txt
+[0.790s] writing top-level names to crazyflie_server_py.egg-info/top_level.txt
+[0.790s] writing manifest file 'crazyflie_server_py.egg-info/SOURCES.txt'
+[0.791s] reading manifest file 'crazyflie_server_py.egg-info/SOURCES.txt'
+[0.791s] writing manifest file 'crazyflie_server_py.egg-info/SOURCES.txt'
+[0.792s] running build_ext
+[0.792s] Creating /home/iiitd/cf_ws/install/crazyflie_server_py/lib/python3.10/site-packages/crazyflie-server-py.egg-link (link to .)
+[0.792s] Installing crazyflie_server script to /home/iiitd/cf_ws/install/crazyflie_server_py/lib/crazyflie_server_py
+[0.792s] 
+[0.792s] Installed /home/iiitd/cf_ws/build/crazyflie_server_py
+[0.792s] running symlink_data
+[0.792s] creating /home/iiitd/cf_ws/install/crazyflie_server_py/share/ament_index
+[0.792s] creating /home/iiitd/cf_ws/install/crazyflie_server_py/share/ament_index/resource_index
+[0.792s] creating /home/iiitd/cf_ws/install/crazyflie_server_py/share/ament_index/resource_index/packages
+[0.792s] symbolically linking /home/iiitd/cf_ws/build/crazyflie_server_py/resource/crazyflie_server_py -> /home/iiitd/cf_ws/install/crazyflie_server_py/share/ament_index/resource_index/packages
+[0.792s] symbolically linking /home/iiitd/cf_ws/build/crazyflie_server_py/package.xml -> /home/iiitd/cf_ws/install/crazyflie_server_py/share/crazyflie_server_py
+[0.812s] Invoked command in '/home/iiitd/cf_ws/build/crazyflie_server_py' returned '0': AMENT_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces LD_LIBRARY_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/iiitd/cf_ws/build/crazyflie_server_py/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/iiitd/cf_ws/install/crazyflie_server_py/lib/python3.10/site-packages:/home/iiitd/cf_ws/install/crazyflie_interfaces/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/iiitd/cf_ws/build/crazyflie_server_py/build --no-deps symlink_data

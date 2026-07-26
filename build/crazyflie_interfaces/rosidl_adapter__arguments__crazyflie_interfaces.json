@@ -1,0 +1,27 @@
+{
+  "package_name": "crazyflie_interfaces",
+  "non_idl_tuples": [
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:msg/ConnectionStatistics.msg",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:msg/ConnectionStatisticsArray.msg",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:msg/FullState.msg",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:msg/LogDataGeneric.msg",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:msg/Hover.msg",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:msg/LogBlock.msg",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:msg/Position.msg",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:msg/Status.msg",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:msg/TrajectoryPolynomialPiece.msg",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:msg/VelocityWorld.msg",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/GoTo.srv",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/Land.srv",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/NotifySetpointsStop.srv",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/SetGroupMask.srv",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/StartTrajectory.srv",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/Stop.srv",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/Takeoff.srv",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/UpdateParams.srv",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/UploadTrajectory.srv",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/RemoveLogging.srv",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/AddLogging.srv",
+    "/home/iiitd/cf_ws/src/crazyswarm2/crazyflie_interfaces:srv/Arm.srv"
+  ]
+}

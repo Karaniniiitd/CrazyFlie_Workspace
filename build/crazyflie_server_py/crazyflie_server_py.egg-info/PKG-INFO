@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: crazyflie-server-py
+Version: 1.0.5
+Summary: Python Crazyflie server node for Crazyswarm2
+Home-page: UNKNOWN
+Maintainer: Wolfgang Hönig, Kimberly N. McGuire
+Maintainer-email: hoenig@tu-berlin.de, kimberleymcguire@gmail.com
+License: MIT
+Platform: UNKNOWN
+Provides-Extra: test
+
+UNKNOWN
+

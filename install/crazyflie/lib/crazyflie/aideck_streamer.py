@@ -1,0 +1,1 @@
+/home/iiitd/cf_ws/src/crazyswarm2/crazyflie/scripts/aideck_streamer.py
