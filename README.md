@@ -22,7 +22,7 @@ Modern autonomous systems increasingly demand **multi-agent coordination** — f
 
 This project is driven by the following vision:
 
-### 🎯 Core Goal — Autonomous Crazyflie Swarm
+### Core Goal — Autonomous Crazyflie Swarm
 
 Build a multi-drone system where a fleet of Crazyflie quadcopters can:
 
@@ -31,7 +31,7 @@ Build a multi-drone system where a fleet of Crazyflie quadcopters can:
 - **Avoid inter-drone collisions** through real-time trajectory negotiation
 - **Adapt dynamically** to changing environments and mission parameters
 
-### 🔬 Research Motivation
+### Research Motivation
 
 | Aspect | Motivation |
 |--------|------------|
@@ -41,7 +41,7 @@ Build a multi-drone system where a fleet of Crazyflie quadcopters can:
 | **Scalability** | Design algorithms that work for 2 drones and scale to 20+ |
 | **Real Hardware Validation** | Move beyond simulation — test coordination strategies on physical drones |
 
-### 🗺️ Roadmap
+### Roadmap
 
 - [x] **Phase 1** — Hardware bring-up: Crazyradio 2.0, firmware, udev, connectivity
 - [x] **Phase 2** — Manual flight validation via Xbox controller and CFClient
