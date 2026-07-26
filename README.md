@@ -10,7 +10,45 @@
 
 This repository documents the complete setup, configuration, and ROS 2 integration of the **Crazyflie 2.1** nano quadcopter on Ubuntu Linux. It covers the entire pipeline — from initial hardware configuration and firmware flashing to manual flight verification and autonomous ROS 2 control.
 
-The workspace is structured around [Crazyswarm2](https://github.com/IMRCLab/crazyswarm2), a ROS 2 package that provides a high-level interface for controlling Crazyflie drones.
+The workspace is structured around [Crazyswarm2](https://github.com/IMRCLab/crazyswarm2), a ROS 2 package that provides a high-level interface for controlling Crazyflie drones. This is a foundational step toward the broader goal of building a **fully autonomous, coordinated Crazyflie swarm**.
+
+---
+
+## Motivation
+
+> *"The goal is not to fly one drone — it is to orchestrate many."*
+
+Modern autonomous systems increasingly demand **multi-agent coordination** — from search-and-rescue missions to precision agriculture and warehouse logistics. The **Crazyflie 2.1**, with its open-source firmware and lightweight ROS 2 integration via Crazyswarm2, offers an ideal research platform to explore and prototype real-world swarm intelligence.
+
+This project is driven by the following vision:
+
+### 🎯 Core Goal — Autonomous Crazyflie Swarm
+
+Build a multi-drone system where a fleet of Crazyflie quadcopters can:
+
+- **Coordinate autonomously** without centralized human control
+- **Distribute tasks** across agents using decentralized planning algorithms
+- **Avoid inter-drone collisions** through real-time trajectory negotiation
+- **Adapt dynamically** to changing environments and mission parameters
+
+### 🔬 Research Motivation
+
+| Aspect | Motivation |
+|--------|------------|
+| **Swarm Intelligence** | Study emergent collective behaviour from simple per-drone rules |
+| **Decentralized Control** | Eliminate single points of failure — no master controller |
+| **Efficient Coordination** | Minimize redundant flight paths and maximize mission coverage |
+| **Scalability** | Design algorithms that work for 2 drones and scale to 20+ |
+| **Real Hardware Validation** | Move beyond simulation — test coordination strategies on physical drones |
+
+### 🗺️ Roadmap
+
+- [x] **Phase 1** — Hardware bring-up: Crazyradio 2.0, firmware, udev, connectivity
+- [x] **Phase 2** — Manual flight validation via Xbox controller and CFClient
+- [x] **Phase 3** — ROS 2 integration: Crazyswarm2 launch, services, takeoff/land
+- [ ] **Phase 4** — Multi-drone spawning and fleet configuration
+- [ ] **Phase 5** — Decentralized task allocation and collision-free trajectory planning
+- [ ] **Phase 6** — Full autonomous swarm mission execution
 
 ---
 
