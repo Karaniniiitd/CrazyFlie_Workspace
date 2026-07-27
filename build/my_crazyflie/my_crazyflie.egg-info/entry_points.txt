@@ -1,0 +1,9 @@
+[console_scripts]
+arm = my_crazyflie.arm:main
+emergency = my_crazyflie.emergency:main
+go_to = my_crazyflie.go_to:main
+land = my_crazyflie.land:main
+sequence = my_crazyflie.sequence:main
+takeoff = my_crazyflie.takeoff:main
+velocity_control = my_crazyflie.velocity_control:main
+

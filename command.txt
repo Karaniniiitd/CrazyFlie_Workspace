@@ -1,0 +1,219 @@
+============================================================
+           CRAZYFLIE CONNECTION WORKFLOW (ROS2 HUMBLE)
+============================================================
+
+Workspace
+---------
+~/cf_ws
+
+============================================================
+TERMINAL 1 : START CRAZYFLIE SERVER
+============================================================
+
+Step 1
+
+cd ~/cf_ws
+
+Step 2
+
+source /opt/ros/humble/setup.bash
+
+Step 3
+
+source install/setup.bash
+
+Step 4
+
+ros2 launch crazyflie launch.py
+
+Keep this terminal OPEN.
+
+Expected:
+
+✓ crazyflie_server started
+✓ teleop started
+✓ joy_node started
+✓ Logging to /pose
+✓ Logging to /status
+
+DO NOT CLOSE THIS TERMINAL.
+
+============================================================
+TERMINAL 2 : VERIFY CONNECTION
+============================================================
+
+Open a NEW terminal.
+
+Step 1
+
+cd ~/cf_ws
+
+Step 2
+
+source /opt/ros/humble/setup.bash
+
+Step 3
+
+source install/setup.bash
+
+------------------------------------------------------------
+
+Check ROS Nodes
+
+ros2 node list
+
+Expected Output
+
+/crazyflie_server
+
+------------------------------------------------------------
+
+Check Services
+
+ros2 service list | grep cf231
+
+Expected Output
+
+/...
+/cf231/takeoff
+/cf231/land
+/cf231/go_to
+/cf231/emergency
+
+------------------------------------------------------------
+
+Check Drone Status
+
+ros2 topic echo /cf231/status --once
+
+Expected
+
+Battery Voltage
+RSSI
+Link Status
+
+============================================================
+TERMINAL 2 : TAKEOFF
+============================================================
+
+ros2 service call \
+/cf231/takeoff \
+crazyflie_interfaces/srv/Takeoff \
+"{group_mask: 0,
+height: 0.2,
+duration: {sec: 2, nanosec: 0}}"
+
+Drone should take off.
+
+============================================================
+TERMINAL 2 : LAND
+============================================================
+
+ros2 service call \
+/cf231/land \
+crazyflie_interfaces/srv/Land \
+"{group_mask: 0,
+height: 0.0,
+duration: {sec: 2, nanosec: 0}}"
+
+Drone should land safely.
+
+============================================================
+TERMINAL 2 : EMERGENCY STOP
+============================================================
+
+ros2 service call \
+/cf231/emergency \
+std_srvs/srv/Empty
+
+Use ONLY if required.
+
+============================================================
+AFTER MODIFYING CODE
+============================================================
+
+Whenever you create or modify a ROS package:
+
+cd ~/cf_ws
+
+source /opt/ros/humble/setup.bash
+
+colcon build --symlink-install
+
+source install/setup.bash
+
+============================================================
+RUN YOUR OWN ROS NODE
+============================================================
+
+Example
+
+ros2 run my_crazyflie takeoff
+
+============================================================
+TERMINAL USAGE
+============================================================
+
+Terminal 1
+-----------
+Launch Crazyflie Server
+
+ros2 launch crazyflie launch.py
+
+Keep it running.
+
+------------------------------------------------------------
+
+Terminal 2
+-----------
+
+Run ROS commands
+
+ros2 node list
+
+ros2 service list
+
+ros2 topic echo
+
+ros2 service call
+
+ros2 run my_crazyflie ...
+
+------------------------------------------------------------
+
+Terminal 3 (Optional)
+---------------------
+
+Debugging
+
+ros2 topic echo ...
+
+ros2 node list
+
+ros2 service list
+
+============================================================
+CURRENT PROGRESS
+============================================================
+
+✓ Clean workspace created
+
+✓ CrazySwarm2 installed
+
+✓ Workspace built successfully
+
+✓ Crazyradio detected
+
+✓ Crazyflie connected
+
+✓ Server launched
+
+✓ ROS communication verified
+
+✓ Takeoff from terminal successful
+
+Next Goal
+
+✓ Create our own ROS2 package
+✓ Write takeoff.py
+✓ Fly the drone completely from Python code

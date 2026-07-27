@@ -1,0 +1,17 @@
+[0.772s] Invoking command in '/home/iiitd/cf_ws/build/crazyflie_server_py': CMAKE_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:/home/iiitd/cf_ws/install/crazyflie_sim:/home/iiitd/cf_ws/install/crazyflie_examples:/home/iiitd/cf_ws/install/crazyflie:/home/iiitd/cf_ws/install/crazyflie_description PYTHONPATH=/home/iiitd/cf_ws/build/crazyflie_server_py/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/iiitd/cf_ws/install/crazyflie_server_py/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/iiitd/cf_ws/build/crazyflie_server_py/build --no-deps symlink_data
+[0.894s] running develop
+[0.976s] running egg_info
+[0.976s] writing crazyflie_server_py.egg-info/PKG-INFO
+[0.976s] writing dependency_links to crazyflie_server_py.egg-info/dependency_links.txt
+[0.977s] writing entry points to crazyflie_server_py.egg-info/entry_points.txt
+[0.977s] writing requirements to crazyflie_server_py.egg-info/requires.txt
+[0.977s] writing top-level names to crazyflie_server_py.egg-info/top_level.txt
+[0.978s] reading manifest file 'crazyflie_server_py.egg-info/SOURCES.txt'
+[0.978s] writing manifest file 'crazyflie_server_py.egg-info/SOURCES.txt'
+[0.979s] running build_ext
+[0.979s] Creating /home/iiitd/cf_ws/install/crazyflie_server_py/lib/python3.10/site-packages/crazyflie-server-py.egg-link (link to .)
+[0.979s] Installing crazyflie_server script to /home/iiitd/cf_ws/install/crazyflie_server_py/lib/crazyflie_server_py
+[0.979s] 
+[0.979s] Installed /home/iiitd/cf_ws/build/crazyflie_server_py
+[0.979s] running symlink_data
+[0.994s] Invoked command in '/home/iiitd/cf_ws/build/crazyflie_server_py' returned '0': CMAKE_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:/home/iiitd/cf_ws/install/crazyflie_sim:/home/iiitd/cf_ws/install/crazyflie_examples:/home/iiitd/cf_ws/install/crazyflie:/home/iiitd/cf_ws/install/crazyflie_description PYTHONPATH=/home/iiitd/cf_ws/build/crazyflie_server_py/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/iiitd/cf_ws/install/crazyflie_server_py/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/iiitd/cf_ws/build/crazyflie_server_py/build --no-deps symlink_data

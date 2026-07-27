@@ -24,6 +24,13 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'takeoff          = my_crazyflie.takeoff:main',
+            'land             = my_crazyflie.land:main',
+            'arm              = my_crazyflie.arm:main',
+            'emergency        = my_crazyflie.emergency:main',
+            'sequence         = my_crazyflie.sequence:main',
+            'go_to            = my_crazyflie.go_to:main',
+            'velocity_control = my_crazyflie.velocity_control:main',
         ],
     },
 )
