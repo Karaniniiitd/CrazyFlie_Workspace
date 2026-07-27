@@ -1,0 +1,222 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+
+% Colors for code snippets
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0.82,0.82}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+\definecolor{navy}{rgb}{0.0,0.2,0.6}
+
+% Listing setup
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{navy}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% Page Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textbf{Crazyflie 2.1 ROS 2 Integration}}
+\lhead{Technical Documentation}
+\rfoot{Page \thepage}
+
+\title{\textbf{\Huge Crazyflie 2.1 ROS 2 Humble Integration \& Modular Control Nodes Document}\\[0.5em]
+\Large Complete Setup, Node Architecture, and Battery Monitoring}
+\author{\textbf{Karan Kumar Anand} \\ Department of Computer Science \& Engineering \\ IIIT Delhi}
+\date{July 27, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This document details the software architecture, modular node development, system configuration, and battery diagnostic tools implemented for the Crazyflie 2.1 micro-quadcopter within a ROS 2 Humble environment. It covers the \texttt{my\_crazyflie} ROS 2 Python package containing specialized clients for arming, takeoff, landing, emergency stop, relative movement, and velocity control, as well as a standalone \texttt{cflib}-based battery monitoring utility.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction \& Workspace Overview}
+The Crazyflie 2.1 workspace is organized under \texttt{\~/cf\_ws} operating on ROS 2 Humble Linux. The hardware platform used is a stock Crazyflie 2.1 quadcopter configured with zero expansion decks (0-deck setup). Due to the lack of optical flow or positioning decks, position estimation relies on open-loop or external positioning methods.
+
+\subsection{Environment Setup}
+Before running ROS 2 nodes or launching the Crazyflie server, the environment must be sourced:
+\begin{lstlisting}[language=bash]
+cd ~/cf_ws
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+\end{lstlisting}
+
+---
+
+\section{ROS 2 Package Structure: \texttt{my\_crazyflie}}
+A custom ROS 2 Python package named \texttt{my\_crazyflie} was constructed in \texttt{\~/cf\_ws/src/my\_crazyflie}.
+
+\subsection{Package Entry Points (\texttt{setup.py})}
+The console scripts registered in \texttt{setup.py} allow direct execution via \texttt{ros2 run my\_crazyflie <script>}:
+\begin{lstlisting}[language=python]
+entry_points={
+    'console_scripts': [
+        'takeoff          = my_crazyflie.takeoff:main',
+        'land             = my_crazyflie.land:main',
+        'arm              = my_crazyflie.arm:main',
+        'emergency        = my_crazyflie.emergency:main',
+        'sequence         = my_crazyflie.sequence:main',
+        'go_to            = my_crazyflie.go_to:main',
+        'velocity_control = my_crazyflie.velocity_control:main',
+    ],
+},
+\end{lstlisting}
+
+---
+
+\section{Detailed Control Nodes Implementation}
+
+\subsection{\texttt{arm.py} — Drone Arming Node}
+In CrazySwarm2, arming is required before executing takeoff commands. This client uses \texttt{crazyflie\_interfaces/srv/Arm}.
+
+\begin{lstlisting}[language=python]
+import rclpy
+from rclpy.node import Node
+from crazyflie_interfaces.srv import Arm
+
+class ArmClient(Node):
+    def __init__(self):
+        super().__init__("arm_client")
+        self.client = self.create_client(Arm, "/cf231/arm")
+        while not self.client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info("Waiting for arm service...")
+
+    def arm(self):
+        request = Arm.Request()
+        request.arm = True
+        self.get_logger().info("Arming drone...")
+        future = self.client.call_async(request)
+        rclpy.spin_until_future_complete(self, future)
+        self.get_logger().info("Drone ARMED!")
+\end{lstlisting}
+
+\subsection{\texttt{takeoff.py} — Autonomous Takeoff Node}
+Sends a height target and duration to \texttt{/cf231/takeoff}.
+
+\begin{lstlisting}[language=python]
+import rclpy
+from rclpy.node import Node
+from crazyflie_interfaces.srv import Takeoff
+
+class TakeoffClient(Node):
+    def __init__(self):
+        super().__init__("takeoff_client")
+        self.client = self.create_client(Takeoff, "/cf231/takeoff")
+
+    def send_request(self):
+        request = Takeoff.Request()
+        request.group_mask = 0
+        request.height = 0.2
+        request.duration.sec = 2
+        future = self.client.call_async(request)
+        rclpy.spin_until_future_complete(self, future)
+\end{lstlisting}
+
+\subsection{\texttt{land.py} — Controlled Landing Node}
+Commands the drone to smoothly descent to $0.0\text{ m}$ height over $2\text{ seconds}$.
+
+\subsection{\texttt{emergency.py} — Emergency Stop Node}
+Calls \texttt{/cf231/emergency} (\texttt{std\_srvs/srv/Empty}) to cut motor power immediately in case of unexpected flight drift.
+
+\subsection{\texttt{sequence.py} — Complete Automated Flight Routine}
+Executes the full safe flight state machine:
+$$\text{Arm} \longrightarrow \text{Takeoff (0.3m)} \longrightarrow \text{Hover (3s)} \longrightarrow \text{Land (0.0m)}$$
+
+\subsection{\texttt{go\_to.py} \& \texttt{velocity_control.py}}
+\begin{itemize}
+    \item \texttt{go\_to.py}: Uses \texttt{crazyflie\_interfaces/srv/GoTo} to move to relative coordinates $(x, y, z)$.
+    \item \texttt{velocity\_control.py}: Publishes velocity and attitude commands directly over \texttt{/cf231/cmd\_vel_legacy} using \texttt{geometry\_msgs/msg/Twist}.
+\end{itemize}
+
+---
+
+\section{Crazyflie Battery Diagnostics (\texttt{battery\_check.py})}
+When using zero expansion decks, power management is critical. Low battery levels result in motor spin without sufficient thrust for lift-off.
+
+\subsection{Standalone Diagnostics Script}
+A Python script using the native \texttt{cflib} library was developed to poll battery status directly via Crazyradio without needing the ROS server active.
+
+\subsection{1S LiPo Battery Voltage Reference Table}
+The Crazyflie 2.1 uses a 1S 3.7V nominal LiPo battery ($3.0\text{ V}$ cutoff to $4.2\text{ V}$ max).
+
+\begin{table}[h!]
+\centering
+\caption{Crazyflie 2.1 LiPo 1S Voltage Classification}
+\vspace{0.5em}
+\begin{tabular}{@{}ccll@{}}
+\toprule
+\textbf{Voltage Range (V)} & \textbf{Approx. Charge (\%)} & \textbf{Status Indicator} & \textbf{Recommended Action} \\ \midrule
+$\ge 4.10\text{ V}$ & $\sim 100\%$ & 🟢 Full & Ready for flight \\
+$\ge 3.90\text{ V}$ & $\sim 75\%$ & 🟡 Good & Safe for normal testing \\
+$\ge 3.75\text{ V}$ & $\sim 50\%$ & 🟠 Medium & Short flight tests only \\
+$\ge 3.50\text{ V}$ & $\sim 25\%$ & 🔴 Low & Recharge soon \\
+$\ge 3.20\text{ V}$ & $\sim 10\%$ & ⛔ Very Low & Land \& recharge immediately \\
+$< 3.20\text{ V}$ & $< 5\%$ & 💀 Critical & Do NOT operate (Battery protection) \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Executing Battery Check}
+Ensure the Crazyflie ROS server is stopped, then run:
+\begin{lstlisting}[language=bash]
+python3 src/my_crazyflie/my_crazyflie/battery_check.py
+\end{lstlisting}
+
+---
+
+\section{Command Summary \& Verification Procedures}
+
+\subsection{Step 1: Start Server (Terminal 1)}
+\begin{lstlisting}[language=bash]
+cd ~/cf_ws
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 launch crazyflie launch.py
+\end{lstlisting}
+
+\subsection{Step 2: Build Workspace \& Run Flight Sequence (Terminal 2)}
+\begin{lstlisting}[language=bash]
+cd ~/cf_ws
+source /opt/ros/humble/setup.bash
+colcon build --symlink-install
+source install/setup.bash
+
+# Run automated flight sequence
+ros2 run my_crazyflie sequence
+\end{lstlisting}
+
+\section{Conclusion}
+The integration of ROS 2 Humble with the Crazyflie 2.1 micro-quadcopter under \texttt{\~/cf\_ws} has been successfully verified. With arming interfaces, automated flight sequences, and battery diagnostic scripts implemented, the system is fully operational for autonomous aerial robotics research.
+
+\end{document}
