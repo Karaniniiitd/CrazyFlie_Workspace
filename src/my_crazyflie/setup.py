@@ -31,6 +31,8 @@ setup(
             'sequence         = my_crazyflie.sequence:main',
             'go_to            = my_crazyflie.go_to:main',
             'velocity_control = my_crazyflie.velocity_control:main',
+            'vertical_thrust = my_crazyflie.vertical_thrust:main',
+            'anti_drift_controller = my_crazyflie.anti_drift_controller:main',
         ],
     },
 )

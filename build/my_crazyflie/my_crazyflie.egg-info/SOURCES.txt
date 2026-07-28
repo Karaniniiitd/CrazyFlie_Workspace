@@ -3,12 +3,14 @@ setup.cfg
 setup.py
 my_crazyflie/__init__.py
 my_crazyflie/arm.py
+my_crazyflie/battery_check.py
 my_crazyflie/emergency.py
 my_crazyflie/go_to.py
 my_crazyflie/land.py
 my_crazyflie/sequence.py
 my_crazyflie/takeoff.py
 my_crazyflie/velocity_control.py
+my_crazyflie/vertical_thrust.py
 my_crazyflie.egg-info/PKG-INFO
 my_crazyflie.egg-info/SOURCES.txt
 my_crazyflie.egg-info/dependency_links.txt

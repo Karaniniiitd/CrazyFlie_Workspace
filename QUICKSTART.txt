@@ -1,0 +1,147 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              CRAZYFLIE 2.1 — QUICK START CHEAT SHEET                        ║
+║              Workspace: ~/cf_ws   |   Drone: cf231                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+BEFORE ANYTHING
+───────────────
+  1. Make sure the Crazyradio USB dongle is plugged into the PC.
+  2. Turn ON the Crazyflie (power switch on the side).
+  3. Wait for the drone LEDs to blink (this means it is ready).
+
+
+══════════════════════════════════════════════════════════════════════════════
+  TERMINAL 1 — START THE SERVER  (keep this open the entire time)
+══════════════════════════════════════════════════════════════════════════════
+
+  cd ~/cf_ws
+  source /opt/ros/humble/setup.bash
+  source install/setup.bash
+  ros2 launch crazyflie launch.py
+
+  ✓ Wait until you see: [crazyflie_server-2]: process started ...
+  ✗ If you see "No Crazyradio dongle found":
+      → Unplug the USB dongle, plug it back in, and re-run the command.
+  ✗ If you see "Resource busy":
+      → Run:  sudo pkill -9 -f crazyflie_server
+      → Then try again.
+
+
+══════════════════════════════════════════════════════════════════════════════
+  TERMINAL 2 — BUILD ONCE (only needed after you edit code)
+══════════════════════════════════════════════════════════════════════════════
+
+  cd ~/cf_ws
+  source /opt/ros/humble/setup.bash
+  colcon build --symlink-install
+  source install/setup.bash
+
+
+══════════════════════════════════════════════════════════════════════════════
+  TERMINAL 2 — FLIGHT COMMANDS  (pick one)
+══════════════════════════════════════════════════════════════════════════════
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  OPTION A — Raw Vertical Thrust (open-loop, no feedback)                │
+  │  Best for: testing if the drone physically lifts off                    │
+  └─────────────────────────────────────────────────────────────────────────┘
+  ros2 run my_crazyflie vertical_thrust
+
+  Drone will:  Arm → Reset Kalman → Apply thrust for 5 seconds → Stop
+
+  ─────────────────────────────────────────────────────────────────────────
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  OPTION B — Anti-Drift P-Controller (closed-loop, with feedback)        │
+  │  Best for: hovering at a fixed position (0, 0, 0.4 m)                  │
+  └─────────────────────────────────────────────────────────────────────────┘
+  ros2 run my_crazyflie anti_drift_controller
+
+  Drone will:  Arm → Reset Kalman → Ramp up → Hold position → Land
+
+  ─────────────────────────────────────────────────────────────────────────
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  OPTION C — Full Flight Sequence (Arm → Takeoff → Hover → Land)         │
+  │  NOTE: Requires a Flow Deck for accurate altitude hold                  │
+  └─────────────────────────────────────────────────────────────────────────┘
+  ros2 run my_crazyflie sequence
+
+  ─────────────────────────────────────────────────────────────────────────
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  OPTION D — Check Battery (run BEFORE starting server)                  │
+  │  NOTE: Stop the server first! Both cannot use the radio at once.        │
+  └─────────────────────────────────────────────────────────────────────────┘
+  python3 src/my_crazyflie/my_crazyflie/battery_check.py
+
+  Battery Voltage Guide (3.7V LiPo 1S):
+    >= 4.10V  ─  Full    (~100%)    Ready to fly
+    >= 3.90V  ─  Good    (~75%)     Safe for testing
+    >= 3.75V  ─  Medium  (~50%)     Short flights only
+    >= 3.50V  ─  Low     (~25%)     Charge soon
+    >= 3.20V  ─  Very Low (~10%)   Land and charge NOW
+     < 3.20V  ─  Critical          Do NOT fly, may damage battery
+
+
+══════════════════════════════════════════════════════════════════════════════
+  EMERGENCY STOP — use any time the drone is flying out of control
+══════════════════════════════════════════════════════════════════════════════
+
+  ros2 run my_crazyflie emergency
+
+  Or press:  Ctrl + C  in Terminal 2 to stop the current command.
+
+
+══════════════════════════════════════════════════════════════════════════════
+  THRUST TUNING GUIDE (for vertical_thrust and anti_drift_controller)
+══════════════════════════════════════════════════════════════════════════════
+
+  Edit the HOVER_THRUST value in the script file:
+
+    38000  →  Motors spin but drone does NOT lift
+    42000  →  Should hover with a fully charged battery
+    46000  →  Should hover with a ~50% battery
+    50000  →  Strong lift — be careful, hold the drone!
+    >55000 →  Very aggressive, do not use indoors
+
+
+══════════════════════════════════════════════════════════════════════════════
+  COMMON ERRORS AND FIXES
+══════════════════════════════════════════════════════════════════════════════
+
+  ERROR: "No Crazyradio dongle found!"
+  FIX:   Unplug the USB Crazyradio dongle and plug it back in.
+
+  ERROR: "Resource busy" or "[Errno 16]"
+  FIX:   sudo pkill -9 -f crazyflie_server
+         Unplug and re-plug the Crazyradio dongle, then relaunch.
+
+  ERROR: Drone does not fly (commands sent but no motor activity)
+  FIX:   Use vertical_thrust or anti_drift_controller instead of sequence.
+         The sequence command requires a Flow Deck.
+
+  ERROR: Drone drifts sideways even with zero roll/pitch
+  FIX:   This is normal on a 0-deck Crazyflie.
+         Use anti_drift_controller for P-control feedback.
+         For perfect hover, install a Flow Deck v2.
+
+  ERROR: "Waiting for arm service..." repeating forever
+  FIX:   The server (Terminal 1) is not running. Start it first.
+
+
+══════════════════════════════════════════════════════════════════════════════
+  ALL AVAILABLE ROS2 COMMANDS
+══════════════════════════════════════════════════════════════════════════════
+
+  ros2 run my_crazyflie arm                   ← arm motors only
+  ros2 run my_crazyflie takeoff               ← arm + takeoff to 0.3m
+  ros2 run my_crazyflie land                  ← land safely
+  ros2 run my_crazyflie emergency             ← KILL MOTORS IMMEDIATELY
+  ros2 run my_crazyflie sequence              ← full auto flight loop
+  ros2 run my_crazyflie vertical_thrust       ← raw thrust (open-loop)
+  ros2 run my_crazyflie anti_drift_controller ← P-control hover (closed-loop)
+  ros2 run my_crazyflie go_to                 ← move to a position
+  ros2 run my_crazyflie velocity_control      ← manual thrust/velocity test
+
+══════════════════════════════════════════════════════════════════════════════

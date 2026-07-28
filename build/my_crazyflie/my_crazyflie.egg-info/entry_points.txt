@@ -6,4 +6,5 @@ land = my_crazyflie.land:main
 sequence = my_crazyflie.sequence:main
 takeoff = my_crazyflie.takeoff:main
 velocity_control = my_crazyflie.velocity_control:main
+vertical_thrust = my_crazyflie.vertical_thrust:main
 

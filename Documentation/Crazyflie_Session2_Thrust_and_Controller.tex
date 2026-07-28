@@ -1,0 +1,406 @@
+\documentclass[11pt,a4paper]{article}
+
+% ── Packages ──────────────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{mdframed}
+\usepackage{tikz}
+
+% ── Colours ───────────────────────────────────────────────────────────────────
+\definecolor{codegreen}{rgb}{0,0.55,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.3,0.5,0.8}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+\definecolor{navy}{rgb}{0.0,0.2,0.55}
+\definecolor{warnorange}{rgb}{0.85,0.4,0.0}
+\definecolor{noteblue}{rgb}{0.1,0.35,0.65}
+
+% ── Listing style ─────────────────────────────────────────────────────────────
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{navy}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% ── Warning box ───────────────────────────────────────────────────────────────
+\newmdenv[
+  linecolor=warnorange,
+  backgroundcolor=warnorange!10,
+  linewidth=2pt,
+  roundcorner=5pt
+]{warningbox}
+
+% ── Note box ──────────────────────────────────────────────────────────────────
+\newmdenv[
+  linecolor=noteblue,
+  backgroundcolor=noteblue!8,
+  linewidth=2pt,
+  roundcorner=5pt
+]{notebox}
+
+% ── Header / Footer ───────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textbf{Crazyflie 2.1 — Session 2 Documentation}}
+\lhead{July 28, 2026}
+\rfoot{Page \thepage}
+
+% ── Title ─────────────────────────────────────────────────────────────────────
+\title{\textbf{\Huge Crazyflie 2.1 ROS 2 Humble}\\[0.4em]
+\Large Session 2: Thrust Control, Recovery State Diagnosis,\\
+and Closed-Loop Anti-Drift P-Controller}
+\author{\textbf{Karan Kumar Anand}\\
+Department of Computer Science \& Engineering\\
+IIIT Delhi}
+\date{July 28, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document covers the second development session for the Crazyflie 2.1 autonomous flight project. The primary findings of the session include the diagnosis and resolution of the Kalman filter \emph{recovery state} blocking motor output on a zero-deck drone, the development of a raw vertical thrust node (\texttt{vertical\_thrust.py}), and the implementation of a closed-loop proportional (P) position controller (\texttt{anti\_drift\_controller.py}) that subscribes to the drone's IMU-estimated pose and continuously corrects altitude, pitch, and roll to resist positional drift.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Session Summary and Accomplishments}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{table}[h!]
+\centering
+\caption{Work completed on July 28, 2026}
+\vspace{0.3em}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{\#} & \textbf{Item}                           & \textbf{Status} \\ \midrule
+1           & Diagnosed Crazyradio USB ``Resource busy'' error  & ✓ Resolved \\
+2           & Diagnosed \emph{recovery state} blocking motor output & ✓ Resolved \\
+3           & Confirmed \texttt{/cf231/pose} published no data without Kalman reset & ✓ Identified \\
+4           & Implemented \texttt{vertical\_thrust.py} with Kalman reset      & ✓ Done \\
+5           & Implemented \texttt{anti\_drift\_controller.py} (P-controller)  & ✓ Done \\
+6           & Created \texttt{QUICKSTART.txt} cheat sheet                     & ✓ Done \\
+7           & Registered all new nodes in \texttt{setup.py}                  & ✓ Done \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Problem Diagnosis: Why the Drone Would Not Fly}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{Crazyradio USB Resource Busy}
+
+When attempting to start the ROS 2 server after a previous run was interrupted with \texttt{Ctrl+C}, the following error appeared:
+
+\begin{lstlisting}[language=bash]
+[crazyflie_server-2] what(): No Crazyradio dongle found!
+ERROR: cflib.crazyflie: Couldn't load link driver: [Errno 16] Resource busy
+\end{lstlisting}
+
+\textbf{Root cause:} The Linux kernel's USB driver retains a lock on the Crazyradio device after a crash or forced process kill. The fix was:
+
+\begin{lstlisting}[language=bash]
+# Force-kill any leftover process holding the USB port
+sudo pkill -9 -f crazyflie_server
+
+# Unplug the Crazyradio dongle physically, wait 3 seconds, replug
+# Then relaunch the server
+ros2 launch crazyflie launch.py
+\end{lstlisting}
+
+\subsection{The Kalman Filter Recovery State (Critical Finding)}
+
+Even after the server started successfully and all ROS 2 services were available (including \texttt{/cf231/arm} and \texttt{/cf231/takeoff}), the drone's motors did not respond. Investigation revealed:
+
+\begin{lstlisting}[language=bash]
+# /cf231/pose produced NO data output:
+ros2 topic echo /cf231/pose
+# <--- completely silent, no messages
+\end{lstlisting}
+
+\textbf{Root cause explained:}
+
+The Crazyflie 2.1 runs an onboard Extended Kalman Filter (EKF) to estimate its position. This EKF requires at least one of the following position inputs to converge:
+\begin{itemize}
+    \item Flow Deck v2 (optical flow + distance sensor)
+    \item Lighthouse positioning system
+    \item Loco Positioning System (UWB)
+    \item External motion capture system (Vicon/Qualisys)
+\end{itemize}
+
+Since this drone has \textbf{zero expansion decks}, the EKF has no sensor input. Without convergence, the firmware enters a \textbf{recovery/safety state} and blocks all motor output — even when thrust is explicitly commanded via \texttt{cmd\_vel\_legacy}.
+
+\begin{notebox}
+\textbf{Key Insight:} The high-level commander (\texttt{takeoff}, \texttt{land}, \texttt{sequence}) requires a fully converged Kalman filter. The low-level legacy commander (\texttt{cmd\_vel\_legacy}) also requires the recovery state to be cleared via a manual Kalman filter reset before it will accept thrust commands.
+\end{notebox}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Solution: Kalman Filter Reset via ROS 2 Parameter Service}
+% ─────────────────────────────────────────────────────────────────────────────
+
+The recovery state is cleared by writing firmware parameter \texttt{kalman.resetEstimation = 1} through the \texttt{/crazyflie\_server/set\_parameters} ROS 2 service. This tells the firmware:
+
+\begin{quote}
+\emph{``Assume you are currently at position $(0, 0, 0)$ on the ground. Accept motor commands from this point forward.''}
+\end{quote}
+
+\begin{lstlisting}[language=python]
+from rcl_interfaces.srv import SetParameters
+from rcl_interfaces.msg import Parameter, ParameterValue, ParameterType
+
+def reset_kalman(self):
+    param = Parameter()
+    param.name = "cf231.params.kalman.resetEstimation"
+    param.value = ParameterValue(
+        type=ParameterType.PARAMETER_INTEGER,
+        integer_value=1
+    )
+    req = SetParameters.Request()
+    req.parameters = [param]
+    future = self.param_client.call_async(req)
+    rclpy.spin_until_future_complete(self, future)
+    time.sleep(2.0)  # allow filter to re-initialise at (0,0,0)
+\end{lstlisting}
+
+After this call, the \texttt{/cf231/pose} topic begins publishing Kalman-estimated position based on IMU dead-reckoning.
+
+\begin{warningbox}
+\textbf{Limitation:} Without a physical positioning deck, the Kalman filter relies purely on IMU dead-reckoning (integrating accelerometer data). This estimate drifts significantly after $\sim$10--15 seconds. A Flow Deck v2 is required for reliable long-duration hover.
+\end{warningbox}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{New Script 1: \texttt{vertical\_thrust.py} — Open-Loop Raw Thrust}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{Purpose}
+This node applies a fixed raw thrust value through \texttt{cmd\_vel\_legacy} to test whether the drone can physically lift off. It is \emph{open-loop} — no position feedback is used, so the drone will drift freely.
+
+\subsection{Execution Sequence}
+\begin{enumerate}
+    \item Reset the Kalman filter (exit recovery state).
+    \item Arm the drone via \texttt{/cf231/arm}.
+    \item Publish raw thrust at a configurable value for a configurable duration.
+    \item Thrust returns to 0.
+\end{enumerate}
+
+\subsection{Twist Message Mapping (cmd\_vel\_legacy)}
+
+\begin{table}[h!]
+\centering
+\caption{Mapping of \texttt{geometry\_msgs/Twist} fields to drone commands}
+\vspace{0.3em}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Twist Field} & \textbf{Drone Axis} & \textbf{Units} \\ \midrule
+\texttt{linear.x}    & Pitch (forward/backward) & degrees \\
+\texttt{linear.y}    & Roll (left/right)        & degrees \\
+\texttt{linear.z}    & Thrust                   & 0 -- 65535 \\
+\texttt{angular.z}   & Yaw rate                 & degrees/s \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Thrust Calibration Table}
+
+\begin{table}[h!]
+\centering
+\caption{Thrust values and expected physical behaviour}
+\vspace{0.3em}
+\begin{tabular}{@{}cll@{}}
+\toprule
+\textbf{Thrust Value} & \textbf{Battery Level} & \textbf{Expected Result} \\ \midrule
+38\,000 & Any   & Motors spin, no lift-off \\
+42\,000 & 100\% & Approximate hover \\
+46\,000 & 50\%  & Approximate hover \\
+50\,000 & Low   & Strong lift-off (caution) \\
+$>55\,000$ & --- & Dangerous, do not use indoors \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Run Command}
+\begin{lstlisting}[language=bash]
+ros2 run my_crazyflie vertical_thrust
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{New Script 2: \texttt{anti\_drift\_controller.py} — Closed-Loop P-Controller}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\subsection{Motivation}
+
+When using only vertical thrust (open-loop), the drone drifts in the horizontal plane because small asymmetries in motor speeds, propeller balance, and centre-of-gravity cause uneven forces. With no feedback, there is no mechanism to detect or compensate this drift.
+
+A \textbf{proportional (P) controller} uses real-time position feedback to generate corrective roll and pitch commands, and adjusts thrust based on altitude error.
+
+\subsection{Control Law}
+
+Let the desired target position be $(x_d, y_d, z_d)$ and the current Kalman-estimated position be $(x, y, z)$. The position errors are:
+
+\begin{align}
+e_x &= x_d - x \quad \text{(forward error)}\\
+e_y &= y_d - y \quad \text{(lateral error)}\\
+e_z &= z_d - z \quad \text{(altitude error)}
+\end{align}
+
+The P-controller outputs:
+
+\begin{align}
+\text{thrust} &= T_{\text{hover}} + K_{p,z} \cdot e_z \\
+\text{pitch}  &= K_{p,xy} \cdot e_x \\
+\text{roll}   &= -K_{p,xy} \cdot e_y
+\end{align}
+
+where $T_{\text{hover}} = 42000$ is the baseline hover thrust, $K_{p,z} = 8000\ \text{(thrust units/m)}$ and $K_{p,xy} = 5.0\ \text{(degrees/m)}$.
+
+\subsection{Controller Gains}
+
+\begin{table}[h!]
+\centering
+\caption{Tunable controller parameters}
+\vspace{0.3em}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Parameter} & \textbf{Default} & \textbf{Effect if increased} & \textbf{Effect if decreased} \\ \midrule
+\texttt{HOVER\_THRUST}  & 42\,000     & More aggressive lift    & Drone sinks \\
+\texttt{Kp\_z}          & 8\,000      & Faster altitude correction & Slow altitude response \\
+\texttt{Kp\_xy}         & 5.0         & Stronger drift correction  & Slower drift correction \\
+\texttt{TARGET\_Z}      & 0.4\,m      & Higher hover altitude  & Lower hover altitude \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{ROS 2 Data Flow}
+
+The closed-loop control system consists of three components communicating over ROS 2 topics and services:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{ccc}
+\fbox{\begin{minipage}{3.8cm}\centering\textbf{anti\_drift\_controller}\\{\small (Terminal 2)}\end{minipage}}
+& $\xrightarrow{\quad\texttt{/cf231/cmd\_vel\_legacy}\quad}$
+& \fbox{\begin{minipage}{3.8cm}\centering\textbf{crazyflie\_server}\\{\small (Terminal 1)}\end{minipage}} \\
+& &  $\downarrow$ {\small Crazyradio USB}  \\
+\raisebox{1.2em}{\small $\xleftarrow{\quad\texttt{/cf231/pose}\text{ (Kalman estimate)}\quad}$}
+& &
+\fbox{\begin{minipage}{3.8cm}\centering\textbf{Crazyflie 2.1}\\{\small (hardware)}\end{minipage}}
+\end{tabular}
+\end{center}
+
+\vspace{0.5em}
+\noindent The controller publishes corrective roll, pitch, and thrust values on \texttt{/cf231/cmd\_vel\_legacy} at 50\,Hz. The drone's IMU-based Kalman filter feeds back its estimated position on \texttt{/cf231/pose}, which the controller subscribes to in order to compute position errors.
+
+\subsection{Flight Phases}
+
+\begin{enumerate}
+    \item \textbf{Phase 1 — Ramp-up ($\sim$1 s):} Thrust increments from 0 to \texttt{HOVER\_THRUST} in steps of 2000 to avoid aggressive jolts.
+    \item \textbf{Phase 2 — P-control loop (10 s, 50 Hz):} Position errors are computed from \texttt{/cf231/pose}. Roll, pitch, and thrust corrections are calculated and published every 20\,ms.
+    \item \textbf{Phase 3 — Ramp-down:} Thrust decrements from \texttt{HOVER\_THRUST} to 0 for a soft landing.
+\end{enumerate}
+
+\subsection{Run Command}
+\begin{lstlisting}[language=bash]
+ros2 run my_crazyflie anti_drift_controller
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Crazyradio Hardware Exclusivity Rule}
+% ─────────────────────────────────────────────────────────────────────────────
+
+A key operational constraint identified during this session is that the Crazyradio USB dongle is a \textbf{single shared hardware resource}. Only one program may hold the radio connection at a time.
+
+\begin{table}[h!]
+\centering
+\caption{Mutually exclusive connection modes}
+\vspace{0.3em}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Program running}        & \textbf{ROS 2 nodes work?} & \textbf{cfclient works?} \\ \midrule
+\texttt{ros2 launch crazyflie launch.py} & \checkmark Yes           & $\times$ No \\
+\texttt{cfclient} (GUI)                  & $\times$ No              & \checkmark Yes \\
+\texttt{battery\_check.py}               & $\times$ No              & $\times$ No \\
+Nothing running                          & ---                      & --- \\ \bottomrule
+\end{tabular}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Multi-Terminal Operation Pattern}
+% ─────────────────────────────────────────────────────────────────────────────
+
+Multiple ROS 2 nodes may run simultaneously, but only \textbf{one flight controller} must be active at any time to avoid conflicting commands on \texttt{/cf231/cmd\_vel\_legacy}.
+
+\begin{lstlisting}[language=bash]
+# Terminal 1 — always running
+ros2 launch crazyflie launch.py
+
+# Terminal 2 — active flight controller (only one at a time)
+ros2 run my_crazyflie anti_drift_controller
+
+# Terminal 3 — safe to run in parallel (read-only monitoring)
+ros2 topic echo /cf231/pose
+
+# Terminal 4 — emergency stop at any time
+ros2 run my_crazyflie emergency
+\end{lstlisting}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Complete Node Inventory (\texttt{my\_crazyflie} Package)}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{table}[h!]
+\centering
+\caption{All registered ROS 2 nodes in \texttt{my\_crazyflie}}
+\vspace{0.3em}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Command}                                 & \textbf{Script}                   & \textbf{Description} \\ \midrule
+\texttt{ros2 run my\_crazyflie arm}              & \texttt{arm.py}                   & Arm motors only \\
+\texttt{ros2 run my\_crazyflie takeoff}          & \texttt{takeoff.py}               & Arm + takeoff to 0.3\,m \\
+\texttt{ros2 run my\_crazyflie land}             & \texttt{land.py}                  & Safe landing \\
+\texttt{ros2 run my\_crazyflie emergency}        & \texttt{emergency.py}             & Instant motor kill \\
+\texttt{ros2 run my\_crazyflie sequence}         & \texttt{sequence.py}              & Full auto flight loop \\
+\texttt{ros2 run my\_crazyflie vertical\_thrust} & \texttt{vertical\_thrust.py}      & Raw open-loop thrust \\
+\texttt{ros2 run my\_crazyflie anti\_drift\_controller} & \texttt{anti\_drift\_controller.py} & Closed-loop P hover \\
+\texttt{ros2 run my\_crazyflie go\_to}           & \texttt{go\_to.py}                & Move to position \\
+\texttt{ros2 run my\_crazyflie velocity\_control}& \texttt{velocity\_control.py}     & Manual thrust/velocity \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Next Steps and Recommendations}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{enumerate}
+    \item \textbf{Tune \texttt{HOVER\_THRUST}:} Increase from 42\,000 toward 46\,000 if the drone cannot lift off, or decrease if it climbs too aggressively.
+    \item \textbf{Tune P gains:} Increase \texttt{Kp\_z} if altitude correction is sluggish. Increase \texttt{Kp\_xy} if sideways drift is not corrected quickly enough.
+    \item \textbf{Install Flow Deck v2:} For reliable, long-duration hover without IMU drift, a Flow Deck v2 is strongly recommended. With it, \texttt{sequence.py} and \texttt{takeoff.py} will also function correctly.
+    \item \textbf{Upgrade to PID controller:} After the P-controller is verified working, add integral (I) and derivative (D) terms to eliminate steady-state error and overshoot.
+    \item \textbf{Trajectory following:} After stable hover is confirmed, implement waypoint navigation using a sequence of \texttt{TARGET\_X/Y/Z} setpoints.
+\end{enumerate}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\section{Conclusion}
+% ─────────────────────────────────────────────────────────────────────────────
+
+This session resolved the critical blocker preventing the Crazyflie 2.1 from flying in the zero-deck configuration: the Kalman filter recovery state. By programmatically resetting the onboard estimator via the ROS 2 parameter service, motor commands are now accepted. A raw thrust node and a closed-loop proportional position controller have been implemented and documented, providing a solid foundation for further research into autonomous flight control.
+
+\end{document}
