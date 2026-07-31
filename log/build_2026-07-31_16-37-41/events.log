@@ -1,0 +1,43 @@
+[0.000000] (-) TimerEvent: {}
+[0.000128] (-) JobUnselected: {'identifier': 'crazyflie'}
+[0.000148] (-) JobUnselected: {'identifier': 'crazyflie_description'}
+[0.000155] (-) JobUnselected: {'identifier': 'crazyflie_examples'}
+[0.000161] (-) JobUnselected: {'identifier': 'crazyflie_interfaces'}
+[0.000166] (-) JobUnselected: {'identifier': 'crazyflie_py'}
+[0.000172] (-) JobUnselected: {'identifier': 'crazyflie_server_py'}
+[0.000177] (-) JobUnselected: {'identifier': 'crazyflie_sim'}
+[0.000183] (my_crazyflie) JobQueued: {'identifier': 'my_crazyflie', 'dependencies': OrderedDict([('crazyflie_interfaces', '/home/iiitd/cf_ws/install/crazyflie_interfaces')])}
+[0.000372] (my_crazyflie) JobStarted: {'identifier': 'my_crazyflie'}
+[0.099901] (-) TimerEvent: {}
+[0.200180] (-) TimerEvent: {}
+[0.300319] (-) TimerEvent: {}
+[0.400471] (-) TimerEvent: {}
+[0.428828] (my_crazyflie) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/iiitd/cf_ws/build/my_crazyflie/build', '--no-deps', 'symlink_data'], 'cwd': '/home/iiitd/cf_ws/build/my_crazyflie', 'env': {'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'VSCODE_CWD': '/home/iiitd', 'LANGUAGE': 'en_IN:en', 'USER': 'iiitd', 'VSCODE_NLS_CONFIG': '{"userLocale":"en-gb","osLocale":"en-in","resolvedLanguage":"en","defaultMessagesFile":"/usr/share/antigravity/resources/app/out/nls.messages.json","locale":"en-gb","availableLanguages":{}}', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '0', 'LD_LIBRARY_PATH': '/home/iiitd/cf_ws/install/crazyflie_interfaces/lib:/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/home/iiitd', 'CHROME_DESKTOP': 'antigravity.desktop', 'OLDPWD': '/home/iiitd/cf_ws', 'DESKTOP_SESSION': 'ubuntu', 'VSCODE_IPC_HOOK': '/run/user/1000/vscode-7dd993e9-1.10-main.sock', 'GIO_LAUNCHED_DESKTOP_FILE': '/usr/share/applications/antigravity.desktop', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'PAGER': 'cat', 'MANAGERPID': '2664', 'SYSTEMD_EXEC_PID': '2851', 'IM_CONFIG_CHECK_ENV': '1', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'ANTIGRAVITY_AGENT': '1', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '3791', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'humble', 'LOGNAME': 'iiitd', 'SUMO_HOME': '/usr/share/sumo', 'JOURNAL_STREAM': '8:21963', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'iiitd', 'TERM': 'dumb', 'GAZEBO_MODEL_PATH': ':/home/iiitd/ros2_ws/install/sjtu_drone_description/share/sjtu_drone_description/models:/home/iiitd/ros2_ws/install/sjtu_drone_description/share/sjtu_drone_description/models', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'FC_FONTATIONS': '1', 'ROS_LOCALHOST_ONLY': '0', 'ANTIGRAVITY_EDITOR_APP_ROOT': '/usr/share/antigravity/resources/app', 'PATH': '/home/iiitd/.local/bin:/home/iiitd/.opencode/bin:/opt/ros/humble/bin:/home/iiitd/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/iiitd/.local/bin', 'SESSION_MANAGER': 'local/iiitd-MS-7E02:@/tmp/.ICE-unix/2818,unix/iiitd-MS-7E02:/tmp/.ICE-unix/2818', 'INVOCATION_ID': '9b4579ac7d2d445a874c4aa1a7de5992', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'GDK_BACKEND': 'wayland', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.NUGUS3', 'LS_COLORS': '', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/home/iiitd/cf_ws/install/crazyflie_interfaces:/opt/ros/humble', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GJS_DEBUG_OUTPUT': 'stderr', 'QT_IM_MODULE': 'ibus', 'ANTIGRAVITY_TRAJECTORY_ID': '81c90e7e-3673-4912-a4cc-83e7f6570c9a', 'PWD': '/home/iiitd/cf_ws/build/my_crazyflie', 'TURTLEBOT3_MODEL': 'burger', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'VSCODE_CODE_CACHE_PATH': '/home/iiitd/.config/Antigravity/CachedData/15487b3041e65228cae24980a3f796c905ef582c', 'GAZEBO_PLUGIN_PATH': ':/home/iiitd/ros2_ws/install/sjtu_drone_description/lib:/home/iiitd/ros2_ws/install/sjtu_drone_description/lib', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/iiitd/cf_ws/build/my_crazyflie/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/iiitd/cf_ws/install/my_crazyflie/lib/python3.10/site-packages:/home/iiitd/cf_ws/install/crazyflie_interfaces/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1', 'VSCODE_PID': '3791', 'CMAKE_PREFIX_PATH': '/home/iiitd/cf_ws/install/crazyflie_interfaces'}, 'shell': False}
+[0.500549] (-) TimerEvent: {}
+[0.550314] (my_crazyflie) StdoutLine: {'line': b'running develop\n'}
+[0.600631] (-) TimerEvent: {}
+[0.635859] (my_crazyflie) StdoutLine: {'line': b'running egg_info\n'}
+[0.636018] (my_crazyflie) StdoutLine: {'line': b'writing my_crazyflie.egg-info/PKG-INFO\n'}
+[0.636052] (my_crazyflie) StdoutLine: {'line': b'writing dependency_links to my_crazyflie.egg-info/dependency_links.txt\n'}
+[0.636124] (my_crazyflie) StdoutLine: {'line': b'writing entry points to my_crazyflie.egg-info/entry_points.txt\n'}
+[0.636170] (my_crazyflie) StdoutLine: {'line': b'writing requirements to my_crazyflie.egg-info/requires.txt\n'}
+[0.636194] (my_crazyflie) StdoutLine: {'line': b'writing top-level names to my_crazyflie.egg-info/top_level.txt\n'}
+[0.637134] (my_crazyflie) StdoutLine: {'line': b"reading manifest file 'my_crazyflie.egg-info/SOURCES.txt'\n"}
+[0.637530] (my_crazyflie) StdoutLine: {'line': b"writing manifest file 'my_crazyflie.egg-info/SOURCES.txt'\n"}
+[0.638236] (my_crazyflie) StdoutLine: {'line': b'running build_ext\n'}
+[0.638346] (my_crazyflie) StdoutLine: {'line': b'Creating /home/iiitd/cf_ws/install/my_crazyflie/lib/python3.10/site-packages/my-crazyflie.egg-link (link to .)\n'}
+[0.638746] (my_crazyflie) StdoutLine: {'line': b'Installing anti_drift_controller script to /home/iiitd/cf_ws/install/my_crazyflie/lib/my_crazyflie\n'}
+[0.638829] (my_crazyflie) StdoutLine: {'line': b'Installing arm script to /home/iiitd/cf_ws/install/my_crazyflie/lib/my_crazyflie\n'}
+[0.638875] (my_crazyflie) StdoutLine: {'line': b'Installing emergency script to /home/iiitd/cf_ws/install/my_crazyflie/lib/my_crazyflie\n'}
+[0.638934] (my_crazyflie) StdoutLine: {'line': b'Installing go_to script to /home/iiitd/cf_ws/install/my_crazyflie/lib/my_crazyflie\n'}
+[0.638958] (my_crazyflie) StdoutLine: {'line': b'Installing land script to /home/iiitd/cf_ws/install/my_crazyflie/lib/my_crazyflie\n'}
+[0.639023] (my_crazyflie) StdoutLine: {'line': b'Installing sequence script to /home/iiitd/cf_ws/install/my_crazyflie/lib/my_crazyflie\n'}
+[0.639048] (my_crazyflie) StdoutLine: {'line': b'Installing takeoff script to /home/iiitd/cf_ws/install/my_crazyflie/lib/my_crazyflie\n'}
+[0.639070] (my_crazyflie) StdoutLine: {'line': b'Installing velocity_control script to /home/iiitd/cf_ws/install/my_crazyflie/lib/my_crazyflie\n'}
+[0.639291] (my_crazyflie) StdoutLine: {'line': b'Installing vertical_thrust script to /home/iiitd/cf_ws/install/my_crazyflie/lib/my_crazyflie\n'}
+[0.639318] (my_crazyflie) StdoutLine: {'line': b'\n'}
+[0.639342] (my_crazyflie) StdoutLine: {'line': b'Installed /home/iiitd/cf_ws/build/my_crazyflie\n'}
+[0.639369] (my_crazyflie) StdoutLine: {'line': b'running symlink_data\n'}
+[0.651966] (my_crazyflie) CommandEnded: {'returncode': 0}
+[0.657318] (my_crazyflie) JobEnded: {'identifier': 'my_crazyflie', 'rc': 0}
+[0.657535] (-) EventReactorShutdown: {}

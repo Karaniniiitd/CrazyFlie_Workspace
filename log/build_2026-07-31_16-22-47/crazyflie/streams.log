@@ -1,0 +1,80 @@
+[0.135s] Invoking command in '/home/iiitd/cf_ws/build/crazyflie': AMENT_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:/home/iiitd/cf_ws/install/crazyflie_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:/home/iiitd/cf_ws/install/crazyflie_description:/opt/ros/humble LD_LIBRARY_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/iiitd/cf_ws/install/crazyflie_interfaces/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/iiitd/cf_ws/build/crazyflie -- -j28 -l28
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target teleop[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target crazyflieLinkCpp[0m
+[0.270s] [ 22%] Built target crazyflieLinkCpp
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target crazyflie_cpp[0m
+[0.270s] [ 27%] Built target teleop
+[0.270s] [ 35%] Built target crazyflie_cpp
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target reboot[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target console[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target comCheck[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target downloadUSDLogfile[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target setParam[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target listLogVariables[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target crazyflie_server[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target scan[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target listMemories[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target listParams[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target battery[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target version[0m
+[0.270s] [35m[1mConsolidate compiler generated dependencies of target log[0m
+[0.270s] [ 40%] Built target crazyflie_server
+[0.270s] [ 57%] Built target listLogVariables
+[0.270s] [ 57%] Built target log
+[0.271s] [ 57%] Built target battery
+[0.271s] [ 60%] Built target version
+[0.271s] [ 67%] Built target setParam
+[0.271s] [ 70%] Built target console
+[0.271s] [ 75%] Built target reboot
+[0.271s] [ 87%] Built target comCheck
+[0.271s] [ 90%] Built target scan
+[0.271s] [ 90%] Built target downloadUSDLogfile
+[0.271s] [ 97%] Built target listMemories
+[0.271s] [100%] Built target listParams
+[0.408s] Invoked command in '/home/iiitd/cf_ws/build/crazyflie' returned '0': AMENT_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:/home/iiitd/cf_ws/install/crazyflie_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:/home/iiitd/cf_ws/install/crazyflie_description:/opt/ros/humble LD_LIBRARY_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/iiitd/cf_ws/install/crazyflie_interfaces/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/iiitd/cf_ws/build/crazyflie -- -j28 -l28
+[0.409s] Invoking command in '/home/iiitd/cf_ws/build/crazyflie': AMENT_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:/home/iiitd/cf_ws/install/crazyflie_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:/home/iiitd/cf_ws/install/crazyflie_description:/opt/ros/humble LD_LIBRARY_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/iiitd/cf_ws/install/crazyflie_interfaces/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/iiitd/cf_ws/build/crazyflie
+[0.416s] -- Install configuration: ""
+[0.416s] -- Execute custom install script
+[0.417s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/comCheck
+[0.417s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/scan
+[0.417s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/listParams
+[0.417s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/listLogVariables
+[0.417s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/listMemories
+[0.417s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/reboot
+[0.417s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/battery
+[0.417s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/version
+[0.417s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/console
+[0.417s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/log
+[0.417s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/setParam
+[0.418s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/downloadUSDLogfile
+[0.418s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/teleop
+[0.418s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/crazyflie_server
+[0.418s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/chooser.py
+[0.418s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/cfmult.py
+[0.418s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/aideck_streamer.py
+[0.418s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/lib/crazyflie/flash.py
+[0.418s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie//launch/launch.py
+[0.418s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie//launch/launch_teleop2.py
+[0.419s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie//launch/teleop_launch.py
+[0.419s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie//config/aideck_streamer.yaml
+[0.419s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie//config/config.rviz
+[0.419s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie//config/crazyflies.yaml
+[0.419s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie//config/motion_capture.yaml
+[0.419s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie//config/server.yaml
+[0.419s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie//config/teleop.yaml
+[0.419s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/ament_index/resource_index/package_run_dependencies/crazyflie
+[0.420s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/ament_index/resource_index/parent_prefix_path/crazyflie
+[0.420s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/environment/ament_prefix_path.sh
+[0.420s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/environment/ament_prefix_path.dsv
+[0.420s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/environment/path.sh
+[0.420s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/environment/path.dsv
+[0.420s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/local_setup.bash
+[0.420s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/local_setup.sh
+[0.420s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/local_setup.zsh
+[0.420s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/local_setup.dsv
+[0.420s] -- Symlinking: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/package.dsv
+[0.426s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/ament_index/resource_index/packages/crazyflie
+[0.426s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/cmake/crazyflieConfig.cmake
+[0.426s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/cmake/crazyflieConfig-version.cmake
+[0.426s] -- Up-to-date symlink: /home/iiitd/cf_ws/install/crazyflie/share/crazyflie/package.xml
+[0.428s] Invoked command in '/home/iiitd/cf_ws/build/crazyflie' returned '0': AMENT_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:/home/iiitd/cf_ws/install/crazyflie_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces:/home/iiitd/cf_ws/install/crazyflie_description:/opt/ros/humble LD_LIBRARY_PATH=/home/iiitd/cf_ws/install/crazyflie_interfaces/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/iiitd/cf_ws/install/crazyflie_interfaces/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/iiitd/cf_ws/build/crazyflie

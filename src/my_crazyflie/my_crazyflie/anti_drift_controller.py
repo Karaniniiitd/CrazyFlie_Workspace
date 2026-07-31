@@ -32,7 +32,10 @@ Usage
   ros2 run my_crazyflie anti_drift_controller
 """
 
+import csv
+import os
 import time
+from datetime import datetime
 
 import rclpy
 from rclpy.node import Node
@@ -69,6 +72,21 @@ class AntiDriftController(Node):
 
     def __init__(self):
         super().__init__("anti_drift_controller")
+
+        # ── CSV log file ───────────────────────────────────────────
+        log_dir = os.path.expanduser("~/cf_ws/logs")
+        os.makedirs(log_dir, exist_ok=True)
+        log_name = datetime.now().strftime("flight_%Y%m%d_%H%M%S.csv")
+        self._log_path = os.path.join(log_dir, log_name)
+        self._log_file = open(self._log_path, "w", newline="")
+        self._csv = csv.writer(self._log_file)
+        self._csv.writerow(
+            ["ros_time_s", "pos_x", "pos_y", "pos_z",
+             "err_x", "err_y", "err_z",
+             "thrust", "pitch_deg", "roll_deg"]
+        )
+        self._log_file.flush()
+        self.get_logger().info(f"Logging flight data to: {self._log_path}")
 
         # ── Current estimated position (updated by pose callback) ──
         self.pos_x = 0.0
@@ -203,6 +221,16 @@ class AntiDriftController(Node):
 
             self._publish_cmd(roll, pitch, 0.0, thrust)
 
+            # ── Log to CSV ───────────────────────────────────────
+            ros_t = self.get_clock().now().nanoseconds / 1e9
+            self._csv.writerow([
+                f"{ros_t:.6f}",
+                f"{self.pos_x:.4f}", f"{self.pos_y:.4f}", f"{self.pos_z:.4f}",
+                f"{err_x:.4f}",     f"{err_y:.4f}",     f"{err_z:.4f}",
+                int(thrust), f"{pitch:.2f}", f"{roll:.2f}"
+            ])
+            self._log_file.flush()   # keep data even on Ctrl+C
+
             # ── Debug readout ────────────────────────────────────
             self.get_logger().info(
                 f"pos=({self.pos_x:.2f},{self.pos_y:.2f},{self.pos_z:.2f}) "
@@ -217,7 +245,8 @@ class AntiDriftController(Node):
             time.sleep(0.05)
 
         self._publish_cmd(0, 0, 0, 0)
-        self.get_logger().info("Sequence complete.")
+        self._log_file.close()
+        self.get_logger().info(f"Sequence complete. Log saved → {self._log_path}")
 
 
 # ──────────────────────────────────────────────────────────────────

@@ -2,6 +2,7 @@ package.xml
 setup.cfg
 setup.py
 my_crazyflie/__init__.py
+my_crazyflie/anti_drift_controller.py
 my_crazyflie/arm.py
 my_crazyflie/battery_check.py
 my_crazyflie/emergency.py

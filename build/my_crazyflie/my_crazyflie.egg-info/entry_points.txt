@@ -1,4 +1,5 @@
 [console_scripts]
+anti_drift_controller = my_crazyflie.anti_drift_controller:main
 arm = my_crazyflie.arm:main
 emergency = my_crazyflie.emergency:main
 go_to = my_crazyflie.go_to:main
